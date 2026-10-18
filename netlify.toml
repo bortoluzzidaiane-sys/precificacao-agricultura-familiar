@@ -1,0 +1,30 @@
+# Publicação estática no Netlify (CLAUDE.md, seção 4). Sem backend.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# O service worker e a página precisam ser buscados de novo a cada visita,
+# senão o celular fica preso numa versão antiga do app.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+
+# Arquivos com nome versionado podem ficar guardados no celular por muito tempo.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
