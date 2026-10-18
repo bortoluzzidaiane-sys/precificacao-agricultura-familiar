@@ -29,9 +29,12 @@ export type ResultadoProduto =
   | {
       ok: false;
       produtoId: string;
-      motivo: 'quantidade-vendida-zero';
+      motivo: MotivoSemCalculo;
       gastoTotal: number;
     };
+
+/** Por que um produto não tem preço calculado: a tela orienta o preenchimento. */
+export type MotivoSemCalculo = 'quantidade-vendida-zero' | 'meses-do-ciclo';
 
 export function mesesDoPeriodo(produto: Pick<Produto, 'periodo' | 'mesesDoCiclo'>): number {
   return produto.periodo === 'mes' ? 1 : produto.mesesDoCiclo;
@@ -44,6 +47,9 @@ export function calcularProduto(
 ): ResultadoProduto {
   const n = mesesDoPeriodo(produto);
   const diretos = somarGastos(produto.gastosDiretos);
+  if (!(n > 0)) {
+    return { ok: false, produtoId: produto.id, motivo: 'meses-do-ciclo', gastoTotal: diretos };
+  }
   const comumMes = gastoComumDoProduto(totalGastosComunsMes, produto.pesoTempo, somaDosPesos);
   const total = gastoTotalDoProduto(diretos, comumMes, n);
   const vendida = quantidadeVendida(produto.quantidadeProduzida, produto.percentualVendido);

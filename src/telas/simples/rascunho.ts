@@ -12,20 +12,17 @@ import {
 } from '../../calculos';
 import { textos, type TrechoPeriodo } from '../../textos';
 
-export const CATEGORIAS_DIRETAS = ['sementes', 'adubo', 'racao', 'embalagem', 'maoDeObra', 'outros'] as const;
-export const CATEGORIAS_COMUNS = [
-  'luzAgua',
-  'combustivel',
-  'transporte',
-  'maoDeObraGeral',
-  'protecao',
-  'outros',
-] as const;
-export const ITENS_AJUDA_TRABALHO = ['alimentacao', 'saude', 'outras'] as const;
+import {
+  CATEGORIAS_COMUNS,
+  CATEGORIAS_DIRETAS,
+  ITENS_AJUDA_TRABALHO,
+  type CategoriaComum,
+  type CategoriaDireta,
+  type ItemAjudaTrabalho,
+} from '../../dados/categorias';
 
-export type CategoriaDireta = (typeof CATEGORIAS_DIRETAS)[number];
-export type CategoriaComum = (typeof CATEGORIAS_COMUNS)[number];
-export type ItemAjudaTrabalho = (typeof ITENS_AJUDA_TRABALHO)[number];
+export { CATEGORIAS_COMUNS, CATEGORIAS_DIRETAS, ITENS_AJUDA_TRABALHO };
+export type { CategoriaComum, CategoriaDireta, ItemAjudaTrabalho };
 export type ChaveUnidade = keyof typeof textos.produto.unidades | 'outra';
 
 export interface EquipamentoRascunho {
@@ -96,12 +93,14 @@ function paraItens<C extends string>(
   categorias: readonly C[],
   descricaoOutros?: string,
 ): ItemDeGasto[] {
+  // A descrição livre vai na última categoria da lista ("outros" / "outras").
+  const ultima = categorias[categorias.length - 1];
   return categorias
     .filter((c) => (valores[c] ?? 0) > 0)
     .map((c) => ({
       categoria: c,
       valor: valores[c]!,
-      ...(c === 'outros' && descricaoOutros?.trim() ? { descricao: descricaoOutros.trim() } : {}),
+      ...(c === ultima && descricaoOutros?.trim() ? { descricao: descricaoOutros.trim() } : {}),
     }));
 }
 
@@ -114,6 +113,7 @@ export function paraProduto(r: Rascunho): Produto {
     mesesDoCiclo: mesesDoRascunho(r),
     gastosDiretos: paraItens(r.diretos, CATEGORIAS_DIRETAS, r.diretosOutrosDescricao),
     pesoTempo: PESO_POR_TEMPO[r.tempo ?? 'medio'],
+    tempo: r.tempo,
     quantidadeProduzida: r.quantidadeProduzida ?? 0,
     percentualVendido: (r.decimosVendidos ?? 10) * 10,
     margemMinima: r.margemMinima ?? 0,
@@ -121,8 +121,13 @@ export function paraProduto(r: Rascunho): Produto {
   };
 }
 
-export function paraPropriedade(r: Rascunho): Propriedade {
+/**
+ * Gastos gerais da roça respondidos no Modo Simples. Recebe a propriedade já guardada
+ * para manter o que só o Modo Completo preenche (forma de divisão, horas, calculadora).
+ */
+export function paraPropriedade(r: Rascunho, anterior?: Propriedade): Propriedade {
   return {
+    ...anterior,
     gastosComuns: paraItens(r.comuns, CATEGORIAS_COMUNS, r.comunsOutrosDescricao),
     equipamentos: r.temEquipamento
       ? r.equipamentos
@@ -130,6 +135,10 @@ export function paraPropriedade(r: Rascunho): Propriedade {
           .map((e) => ({ valorPago: e.valorPago!, anosDeUso: e.anosDeUso! }))
       : [],
     meuTrabalho: r.meuTrabalho ?? 0,
+    ajudaTrabalho:
+      r.sabeMeuTrabalho === false
+        ? paraItens(r.ajudaTrabalho, ITENS_AJUDA_TRABALHO, r.ajudaTrabalhoOutrasDescricao)
+        : anterior?.ajudaTrabalho,
   };
 }
 

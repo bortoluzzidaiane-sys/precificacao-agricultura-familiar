@@ -48,3 +48,22 @@ const formatoReal = new Intl.NumberFormat('pt-BR', {
 export function formatarReal(valor: number): string {
   return formatoReal.format(valor).replace(/\s/g, '\u00A0');
 }
+
+const formatoRealExato = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 4,
+});
+
+/** Valor exato, com até 4 casas (Modo Completo): `R$ 1,875`. */
+export function formatarRealExato(valor: number): string {
+  return formatoRealExato.format(valor).replace(/\s/g, '\u00A0');
+}
+
+const formatoNumero = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
+
+/** Quantidades e percentuais: `1.234,5`. */
+export function formatarNumero(valor: number): string {
+  return formatoNumero.format(valor);
+}

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import {
   apagarRascunho,
+  carregarPropriedade,
   carregarRascunho,
   salvarProduto,
   salvarPropriedade,
@@ -25,7 +26,7 @@ interface Estado {
 
 const estadoInicial = (): Estado => ({ fase: 'inicio', indice: 0, rascunho: rascunhoVazio() });
 
-export function AssistentePreco() {
+export function AssistentePreco({ irParaCompleto }: { irParaCompleto: () => void }) {
   const [estado, setEstado] = useState<Estado>(estadoInicial);
   const [guardado, setGuardado] = useState<Estado | null>(null);
   const [carregou, setCarregou] = useState(false);
@@ -44,9 +45,15 @@ export function AssistentePreco() {
     salvarRascunho(novo);
     if (novo.fase === 'resultado') {
       salvarProduto(paraProduto(novo.rascunho));
-      salvarPropriedade(paraPropriedade(novo.rascunho));
+      carregarPropriedade().then((anterior) => salvarPropriedade(paraPropriedade(novo.rascunho, anterior)));
     }
   }
+
+  const botaoModo = (
+    <button type="button" className="botao-modo" onClick={irParaCompleto}>
+      {textos.modo.irParaCompleto}
+    </button>
+  );
 
   if (!carregou) return null;
 
@@ -79,21 +86,25 @@ export function AssistentePreco() {
             {!guardado && <span aria-hidden="true"> →</span>}
           </button>
         </div>
+        {botaoModo}
       </section>
     );
   }
 
   if (estado.fase === 'resultado') {
     return (
-      <Resultado
-        rascunho={estado.rascunho}
-        mudarRespostas={() => mudar({ ...estado, fase: 'perguntas', indice: 0 })}
-        novoCalculo={() => {
-          apagarRascunho();
-          setGuardado(null);
-          setEstado(estadoInicial());
-        }}
-      />
+      <>
+        <Resultado
+          rascunho={estado.rascunho}
+          mudarRespostas={() => mudar({ ...estado, fase: 'perguntas', indice: 0 })}
+          novoCalculo={() => {
+            apagarRascunho();
+            setGuardado(null);
+            setEstado(estadoInicial());
+          }}
+        />
+        <div className="tela">{botaoModo}</div>
+      </>
     );
   }
 

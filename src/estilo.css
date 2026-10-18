@@ -147,3 +147,200 @@ button, input { font: inherit; color: inherit; }
 
 .detalhes { margin: 16px 0; padding-left: 22px; font-size: 18px; color: var(--texto-suave); }
 .detalhes li { margin-bottom: 6px; }
+
+/* ---------- Comum aos dois modos ---------- */
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.botao-modo {
+  display: block;
+  margin: 32px auto 0;
+  min-height: 48px;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  color: var(--foco);
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- Modo Completo: mais informação por tela, mesmo contraste ---------- */
+.completo { font-size: 17px; }
+
+.completo-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--verde);
+  color: #ffffff;
+}
+.completo-topo p { margin: 0; }
+.completo-app { font-size: 20px; font-weight: 800; }
+.completo-modo { font-size: 15px; }
+.completo-topo .botao-pequeno { background: #ffffff; border-color: #ffffff; color: var(--texto); }
+
+.completo-abas {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--fundo);
+  border-bottom: 2px solid var(--borda);
+}
+.completo-aba {
+  min-height: 52px;
+  padding: 6px 4px;
+  border: none;
+  border-bottom: 4px solid transparent;
+  background: none;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.15;
+  cursor: pointer;
+}
+.completo-aba.ativa { border-bottom-color: var(--verde); color: var(--verde); font-weight: 800; }
+
+.completo-conteudo { max-width: 720px; margin: 0 auto; padding: 16px 16px 40px; }
+.completo-carregando { padding: 16px; }
+.completo-rodape { margin-top: 32px; font-size: 15px; color: var(--texto-suave); text-align: center; }
+.completo-titulo { margin: 8px 0 12px; font-size: 24px; }
+.completo-subtitulo { margin: 0 0 10px; font-size: 19px; }
+
+.painel {
+  margin: 16px 0;
+  padding: 14px;
+  border: 2px solid #cccccc;
+  border-radius: 12px;
+}
+.painel-resultado { border-color: var(--verde); background: var(--fundo-cartao); }
+
+.botao-pequeno, .botao-acao, .botao-perigo {
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 2px solid var(--borda);
+  border-radius: 10px;
+  background: var(--fundo);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.botao-pequeno:disabled, .botao-acao:disabled { opacity: 0.5; cursor: not-allowed; }
+.botao-acao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  border: none;
+  background: var(--verde);
+  color: #ffffff;
+  font-size: 18px;
+}
+.botao-perigo { width: 100%; margin-top: 8px; border-color: var(--alerta); color: var(--alerta); }
+.botao-arquivo { position: relative; }
+
+.campo { margin-bottom: 12px; }
+.campo-rotulo { display: block; margin-bottom: 4px; font-size: 16px; font-weight: 600; }
+.campo-linha { display: flex; align-items: center; gap: 6px; }
+.campo-extra { font-weight: 700; white-space: nowrap; }
+.campo-entrada {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 6px 10px;
+  border: 2px solid var(--borda);
+  border-radius: 8px;
+  background: var(--fundo);
+  font-size: 18px;
+}
+.campo-entrada[aria-invalid='true'] { border-color: var(--alerta); }
+.campo-ajuda { margin: 4px 0 0; font-size: 15px; color: var(--texto-suave); }
+.campo-erro { margin: 4px 0 0; font-size: 15px; font-weight: 700; color: var(--alerta); }
+.campos-lado { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.escolha { margin: 0 0 12px; padding: 0; border: none; }
+.escolha-opcoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.escolha-botao {
+  flex: 1 1 auto;
+  min-height: 48px;
+  padding: 6px 12px;
+  border: 2px solid var(--borda);
+  border-radius: 10px;
+  background: var(--fundo);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.escolha-botao.ativo { border: 3px solid var(--verde); background: var(--verde-claro); color: var(--verde); }
+
+.linha-outro {
+  margin: 8px 0 14px;
+  padding: 10px;
+  border-left: 4px solid #cccccc;
+  background: #fafafa;
+}
+
+.valor-calculado { margin: 6px 0; }
+.aviso-linha { margin: 8px 0; font-weight: 700; color: var(--alerta); }
+
+.situacao { display: inline-block; font-weight: 700; }
+.situacao-bom { color: var(--verde); }
+.situacao-alerta { color: var(--alerta); }
+
+.lista-produtos { margin: 0 0 16px; padding: 0; list-style: none; }
+.lista-produtos li { margin-bottom: 10px; }
+.cartao-produto {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 2px solid var(--borda);
+  border-radius: 12px;
+  background: var(--fundo);
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+.cartao-produto-nome { font-size: 19px; font-weight: 800; }
+.cartao-produto-periodo { display: block; font-size: 15px; font-weight: 400; color: var(--texto-suave); }
+.cartao-produto-precos { display: flex; flex-direction: column; gap: 2px; }
+.grade-produtos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+
+.tabela-calculo { width: 100%; border-collapse: collapse; font-size: 16px; }
+.tabela-calculo th, .tabela-calculo td { padding: 6px 4px; border-bottom: 1px solid #cccccc; vertical-align: top; }
+.tabela-calculo th { font-weight: 400; text-align: left; }
+.tabela-calculo td { font-weight: 700; text-align: right; white-space: nowrap; }
+.linha-destaque th, .linha-destaque td { font-size: 18px; font-weight: 800; color: var(--verde); }
+
+.lista-divisao { margin: 0; padding: 0; list-style: none; }
+.lista-divisao li { padding: 10px 0; border-bottom: 1px solid #cccccc; }
+.lista-divisao-nome { margin: 0 0 6px; font-weight: 800; }
+
+.lado-a-lado { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+.caixa-valor { padding: 10px; border: 2px solid var(--borda); border-radius: 10px; }
+.caixa-rotulo { margin: 0; font-size: 15px; }
+.caixa-numero { margin: 4px 0 0; font-size: 20px; font-weight: 800; }
+
+.rolagem-tabela { overflow-x: auto; margin: 14px 0; }
+.tabela-resumo { width: 100%; border-collapse: collapse; font-size: 15px; }
+.tabela-resumo th, .tabela-resumo td { padding: 6px 4px; border-bottom: 1px solid #cccccc; text-align: right; }
+.tabela-resumo th[scope='row'], .tabela-resumo thead th:first-child { text-align: left; }
+.tabela-resumo thead th { font-size: 14px; vertical-align: bottom; }
+.tabela-resumo td { white-space: nowrap; }
+.tabela-resumo tfoot th, .tabela-resumo tfoot td { font-weight: 800; border-top: 2px solid var(--borda); }
+
+.calculadora { margin: 8px 0 14px; }
+.calculadora summary { min-height: 48px; display: flex; align-items: center; font-weight: 700; cursor: pointer; color: var(--foco); }

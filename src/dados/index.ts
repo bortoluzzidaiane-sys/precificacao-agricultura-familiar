@@ -56,3 +56,19 @@ export function carregarRascunho<T>() {
 export function apagarRascunho() {
   return tentar((db) => db.delete(LOJA_GERAL, 'rascunhoSimples'));
 }
+
+export function excluirProduto(id: string) {
+  return tentar((db) => db.delete(LOJA_PRODUTOS, id));
+}
+
+/** Restaura uma cópia de segurança: troca todos os produtos e a propriedade de uma vez. */
+export function substituirTudo(produtos: Produto[], propriedade: Propriedade) {
+  return tentar(async (db) => {
+    const tx = db.transaction([LOJA_PRODUTOS, LOJA_GERAL], 'readwrite');
+    await tx.objectStore(LOJA_PRODUTOS).clear();
+    for (const p of produtos) await tx.objectStore(LOJA_PRODUTOS).put(p);
+    await tx.objectStore(LOJA_GERAL).put(propriedade, 'propriedade');
+    await tx.done;
+    return true;
+  });
+}

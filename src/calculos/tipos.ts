@@ -27,8 +27,12 @@ export interface Produto {
   mesesDoCiclo: number;
   /** Gastos só deste produto, no período (ciclo inteiro, se for `ciclo`). */
   gastosDiretos: ItemDeGasto[];
-  /** Peso de tempo: 3/2/1 no Modo Simples ou percentual no Modo Completo. */
+  /** Peso de tempo efetivo usado na divisão (5.4): 3/2/1 ou o percentual. */
   pesoTempo: number;
+  /** Tempo informado como muito / médio / pouco. */
+  tempo?: TempoSimples;
+  /** Tempo informado como percentual (Modo Completo). */
+  percentualTempo?: number;
   quantidadeProduzida: number;
   /** % da produção que é vendida (0–100). */
   percentualVendido: number;
@@ -43,4 +47,12 @@ export interface Propriedade {
   equipamentos: Equipamento[];
   /** Meu trabalho: quanto preciso tirar por mês (5.3.1). Entra uma única vez. */
   meuTrabalho: number;
+  /** Como o tempo de trabalho é informado: muito/médio/pouco ou percentual. Padrão: pesos. */
+  divisaoTempo?: DivisaoTempo;
+  /** Horas trabalhadas no mês, só para o valor da hora equivalente (informativo). */
+  horasNoMes?: number;
+  /** Calculadora de apoio do "Meu trabalho": só sugestão, não entra nos gastos. */
+  ajudaTrabalho?: ItemDeGasto[];
 }
+
+export type DivisaoTempo = 'pesos' | 'percentual';
